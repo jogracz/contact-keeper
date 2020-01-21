@@ -105,8 +105,23 @@ router.put('/:id', auth, async (req, res) => {
 // @route     DELETE api/contacts/:id
 // @desc      Delete specific contact
 // @access    Restricted
-router.delete('/:id', (req, res) => {
-  res.send('Delete specific contact');
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    let contact = await Contact.findById(req.params.id);
+    // Make sure contact exists
+    if (!contact) return res.status(400).json({ msg: 'Contact not found' });
+
+    // Make sure user owns this contact
+    if (contact.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+
+    await Contact.findByIdAndRemove(req.params.id);
+    res.json({ msg: 'Contact Removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 module.exports = router;
