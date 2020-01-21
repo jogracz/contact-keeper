@@ -71,8 +71,35 @@ router.get('/:id', (req, res) => {
 // @route     PUT api/contacts/{id}
 // @desc      Update specific contact
 // @access    Restricted
-router.put('/:id', (req, res) => {
-  res.send('Update specific contact');
+router.put('/:id', auth, async (req, res) => {
+  const { name, email, phone, type } = req.body;
+
+  //Build a contact model
+  const contactFields = {};
+  if (name) contactFields.name = name;
+  if (email) contactFields.name = email;
+  if (phone) contactFields.name = phone;
+  if (type) contactFields.name = type;
+
+  try {
+    let contact = await Contact.findById(req.params.id);
+    if (!contact) return res.status(400).json({ msg: 'Contact not found' });
+
+    // Make sure user owns this contact
+    if (contact.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+
+    contact = await Contact.findByIdAndUpdate(
+      req.params.id,
+      { $set: contactFields },
+      { new: true }
+    );
+    res.json(contact);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route     DELETE api/contacts/:id
