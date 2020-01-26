@@ -8,6 +8,13 @@
   --danger-color: #dc3545;
   --success-color: #28a745;
 }
+:root {
+  --primary-color: #ffa42e;
+  --dark-color: #363636;
+  --light-color: #eeeeee;
+  --danger-color: #f63f3a;
+  --success-color: #17aaaa;
+}
 
 * {
   box-sizing: border-box;
