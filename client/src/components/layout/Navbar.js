@@ -14,24 +14,20 @@ const Navbar = ({ title, icon }) => {
   // Logged in links
   const authLinks = (
     <Fragment>
-      <li>Hi {user && user.name}</li>
+      <li>
+        <small>Logged in as {user && user.name} </small>
+      </li>
       <li>
         <a href='#' onClick={onLogout}>
           <i className='fas sign-out-alt'></i>
           <span className='hide-sm'>Logout</span>
         </a>
       </li>
-      <li>
-        <Link to='/'>Home</Link>
-      </li>
     </Fragment>
   );
 
   const guestLinks = (
     <Fragment>
-      <li>
-        <Link to='/'>Home</Link>
-      </li>
       <li>
         <Link to='/Register'>Register</Link>
       </li>
