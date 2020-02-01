@@ -1,5 +1,7 @@
 import {
   DELETE_CONTACT,
+  GET_CONTACTS,
+  CLEAR_CONTACTS,
   ADD_CONTACT,
   SET_CURRENT,
   CLEAR_CURRENT,
@@ -11,11 +13,17 @@ import {
 
 export default (state, action) => {
   switch (action.type) {
+    case GET_CONTACTS:
+      return {
+        ...state,
+        contacts: action.payload,
+        loading: false
+      };
     case ADD_CONTACT:
       return {
         ...state,
-        contacts: [...state.contacts, action.payload]
-        //loading: false
+        contacts: [action.payload, ...state.contacts],
+        loading: false
       };
     case UPDATE_CONTACT:
       return {
@@ -28,8 +36,16 @@ export default (state, action) => {
       return {
         ...state,
         contacts: state.contacts.filter(
-          contact => contact.id !== action.payload
+          contact => contact._id !== action.payload
         )
+      };
+    case CLEAR_CONTACTS:
+      return {
+        ...state,
+        contacts: null,
+        filteredContact: null,
+        error: null,
+        currentContact: null
       };
     case SET_CURRENT:
       return {
@@ -52,7 +68,7 @@ export default (state, action) => {
     case CLEAR_FILTER:
       return {
         ...state,
-        filteredContact: null
+        filteredContacts: null
       };
     case CONTACT_ERROR:
       return {
